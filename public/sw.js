@@ -1,7 +1,10 @@
-var CACHE_NAME = 'my-site-cache-v1';
+var CACHE_NAME = 'my-site-mas2';
 var urlsToCache = [
   '/',
-  '/scripts/app.js'
+  '/scripts/app.js',
+  '/scripts/test.js',
+  '/scripts/test1.js',
+  '/scripts/test2.js'
 ];
 
 self.addEventListener('install', function(event) {
@@ -27,5 +30,22 @@ self.addEventListener('fetch', function(event) {
         return fetch(event.request);
       }
     )
+  );
+});
+
+self.addEventListener('activate', function(event) {
+
+  var cacheWhitelist = ['my-site-mas2'];
+
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
